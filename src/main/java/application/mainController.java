@@ -1,0 +1,66 @@
+package application;
+
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.VBox;
+import util.Alerts;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class mainController implements Initializable {
+    @FXML
+    private MenuItem menuItemSeller;
+    @FXML
+    private MenuItem menuItemDepartment;
+    @FXML
+    private MenuItem menuItemAbout;
+
+
+    //como nomear seu metodo seguindo a convenção:
+    //nome do metodo = on, nome do controle, evento = onMenuItemSellerAction
+    @FXML
+    protected void onMenuItemSellerAction() {
+        System.out.println("ON MENU ITEM SELLER ACTION");
+    }
+    @FXML
+    protected void onMenuItemDepartmentAction() {
+        System.out.println("ON MENU ITEM DEPARTMENT ACTION");
+    }
+    @FXML
+    protected void onMenuItemAboutAction() {
+        loadView();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+    }
+
+    //synchronized = garante que o processo não será interrompido durante o multithreading
+    private synchronized void loadView() {
+        try{
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/aboutView.fxml"));
+            VBox newVBox = loader.load();
+
+            //trecho de código para manter o menuBar mesmo depois de carregar outra tela
+            Scene mainScene = mainApplication.getMainScene();
+            VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+            Node mainMenu = mainVBox.getChildren().getFirst();
+            mainVBox.getChildren().clear();
+            mainVBox.getChildren().add(mainMenu);
+            mainVBox.getChildren().addAll(newVBox.getChildren());
+
+        } catch (IOException error) {
+            Alerts.showAlert("IO Exception", "Error Loading view", error.getMessage(), Alert.AlertType.ERROR);
+        }
+
+
+    }
+}

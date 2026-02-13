@@ -3,7 +3,7 @@ module br.com.gbass.workshopjavafxjdbc {
     requires javafx.fxml;
 
 
-    opens br.com.gbass.workshopjavafxjdbc to javafx.fxml;
-    exports br.com.gbass.workshopjavafxjdbc;
+    opens application to javafx.fxml;
+    exports application;
 
 }
