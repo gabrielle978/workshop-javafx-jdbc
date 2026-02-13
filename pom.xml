@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                br.com.gbass.workshopjavafxjdbc/br.com.gbass.workshopjavafxjdbc.mainApplication
+                                br.com.gbass.workshopjavafxjdbc/mainApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

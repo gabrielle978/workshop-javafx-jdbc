@@ -5,4 +5,5 @@ module br.com.gbass.workshopjavafxjdbc {
 
     opens br.com.gbass.workshopjavafxjdbc to javafx.fxml;
     exports br.com.gbass.workshopjavafxjdbc;
+
 }
