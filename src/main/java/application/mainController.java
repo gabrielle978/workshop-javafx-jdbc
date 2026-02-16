@@ -15,6 +15,7 @@ import util.Alerts;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class mainController implements Initializable {
     @FXML
@@ -33,11 +34,15 @@ public class mainController implements Initializable {
     }
     @FXML
     public void onMenuItemDepartmentAction() {
-        loadView2("/departmentList.fxml");
+        //2º parametro -> ação de inicialização como parâmetro com expressão lambda
+        loadView("/departmentList.fxml",(departmentListController controller) ->{
+            controller.setDepartmentService(new departmentService());
+            controller.updateTableView();
+        });
     }
     @FXML
     public void onMenuItemAboutAction() {
-        loadView("/aboutView.fxml");
+        loadView("/aboutView.fxml", x -> {});
     }
 
     @Override
@@ -45,7 +50,7 @@ public class mainController implements Initializable {
     }
 
     //synchronized = garante que o processo não será interrompido durante o multithreading
-    private synchronized void loadView(String pathView) {
+    private synchronized <T> void loadView(String pathView, Consumer<T> initializingAction) {
         try{
             //getResource() -> NÃO usa caminho do projeto, ele usa o classpath (Target/classes) depois que o projeto é compilado (caminho relativo)
             FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
@@ -59,33 +64,13 @@ public class mainController implements Initializable {
             mainVBox.getChildren().add(mainMenu);
             mainVBox.getChildren().addAll(newVBox.getChildren());
 
-        } catch (IOException error) {
-            Alerts.showAlert("IO Exception", "Error Loading view", error.getMessage(), Alert.AlertType.ERROR);
-        }
-
-    }
-
-    private synchronized void loadView2(String pathView) {
-        try {
-            //getResource() -> NÃO usa caminho do projeto, ele usa o classpath (Target/classes) depois que o projeto é compilado (caminho relativo)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
-            VBox newVBox = loader.load();
-
-            //trecho de código para manter o menuBar mesmo depois de carregar outra tela
-            Scene mainScene = mainApplication.getMainScene();
-            VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
-            Node mainMenu = mainVBox.getChildren().getFirst();
-            mainVBox.getChildren().clear();
-            mainVBox.getChildren().add(mainMenu);
-            mainVBox.getChildren().addAll(newVBox.getChildren());
-
-            //acessa o controller ao invés do view apenas
-            departmentListController controller = loader.getController();
-            controller.setDepartmentService(new departmentService());
-            controller.updateTableView();
+            //linhas de código que executa o segundo parâmetro
+            T controller = loader.getController();
+            initializingAction.accept(controller);
 
         } catch (IOException error) {
             Alerts.showAlert("IO Exception", "Error Loading view", error.getMessage(), Alert.AlertType.ERROR);
         }
+
     }
 }
