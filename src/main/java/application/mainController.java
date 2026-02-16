@@ -46,7 +46,7 @@ public class mainController implements Initializable {
     //synchronized = garante que o processo não será interrompido durante o multithreading
     private synchronized void loadView(String pathView) {
         try{
-            //getResource() -> NÃO usa caminho do projeto, ele usa o classpath (Target/classes) depois que o projeto é compilado
+            //getResource() -> NÃO usa caminho do projeto, ele usa o classpath (Target/classes) depois que o projeto é compilado (caminho relativo)
             FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
             VBox newVBox = loader.load();
 
