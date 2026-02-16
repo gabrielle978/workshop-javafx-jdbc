@@ -9,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.services.departmentService;
 import util.Alerts;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class mainController implements Initializable {
     }
     @FXML
     public void onMenuItemDepartmentAction() {
-        loadView("/departmentList.fxml");
+        loadView2("/departmentList.fxml");
     }
     @FXML
     public void onMenuItemAboutAction() {
@@ -62,6 +63,29 @@ public class mainController implements Initializable {
             Alerts.showAlert("IO Exception", "Error Loading view", error.getMessage(), Alert.AlertType.ERROR);
         }
 
+    }
 
+    private synchronized void loadView2(String pathView) {
+        try {
+            //getResource() -> NÃO usa caminho do projeto, ele usa o classpath (Target/classes) depois que o projeto é compilado (caminho relativo)
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
+            VBox newVBox = loader.load();
+
+            //trecho de código para manter o menuBar mesmo depois de carregar outra tela
+            Scene mainScene = mainApplication.getMainScene();
+            VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
+            Node mainMenu = mainVBox.getChildren().getFirst();
+            mainVBox.getChildren().clear();
+            mainVBox.getChildren().add(mainMenu);
+            mainVBox.getChildren().addAll(newVBox.getChildren());
+
+            //acessa o controller ao invés do view apenas
+            departmentListController controller = loader.getController();
+            controller.setDepartmentService(new departmentService());
+            controller.updateTableView();
+
+        } catch (IOException error) {
+            Alerts.showAlert("IO Exception", "Error Loading view", error.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }
