@@ -31,12 +31,12 @@ public class mainController implements Initializable {
         System.out.println("ON MENU ITEM SELLER ACTION");
     }
     @FXML
-    protected void onMenuItemDepartmentAction() {
-        System.out.println("ON MENU ITEM DEPARTMENT ACTION");
+    public void onMenuItemDepartmentAction() {
+        loadView("/departmentList.fxml");
     }
     @FXML
-    protected void onMenuItemAboutAction() {
-        loadView();
+    public void onMenuItemAboutAction() {
+        loadView("/aboutView.fxml");
     }
 
     @Override
@@ -44,9 +44,10 @@ public class mainController implements Initializable {
     }
 
     //synchronized = garante que o processo não será interrompido durante o multithreading
-    private synchronized void loadView() {
+    private synchronized void loadView(String pathView) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/aboutView.fxml"));
+            //getResource() -> NÃO usa caminho do projeto, ele usa o classpath (Target/classes) depois que o projeto é compilado
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
             VBox newVBox = loader.load();
 
             //trecho de código para manter o menuBar mesmo depois de carregar outra tela
