@@ -3,16 +3,25 @@ package application;
 import com.sun.tools.javac.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Department;
 import model.services.departmentService;
+import util.Alerts;
+import util.Utils;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -35,8 +44,9 @@ public class departmentListController implements Initializable {
     private ObservableList<Department> observableList;
 
     @FXML
-    public void onBtnAction(){
-        System.out.println("onBtnAction");
+    public void onBtNewAction(ActionEvent event){
+        Stage parentStage = Utils.currentStage(event);
+        createDialogForm(parentStage, "/departmentForm.fxml");
     }
 
     public void setDepartmentService (departmentService service){
@@ -68,5 +78,25 @@ public class departmentListController implements Initializable {
         List<Department> list = service.findAll();
         observableList = FXCollections.observableArrayList(list);
         departmentTableView.setItems(observableList);
+    }
+
+    private void createDialogForm(Stage parentStage, String pathView){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
+            Pane pane = loader.load();
+
+            //função para carregar e preencher dados no formulário para novo departamento;
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Enter department data");
+            dialogStage.setScene(new Scene(pane));
+            dialogStage.setResizable(false);
+            dialogStage.initOwner(parentStage);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.showAndWait();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            //lerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+        }
     }
 }
