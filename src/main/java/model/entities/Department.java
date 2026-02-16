@@ -1,25 +1,43 @@
 package model.entities;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 public class Department {
+//    @Serial
+//    private static final long serialVersionUID =1L;
+
     private Integer id;
     private String name;
 
-    public Department() {
+    public Department(){
+
     }
 
-    public Department(Integer id, String name) {
+    public Department (Integer id, String name){
         this.id = id;
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Department that = (Department) o;
+        return Objects.equals(id, that.id);
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Department{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 
     public String getName() {
@@ -30,23 +48,11 @@ public class Department {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Department Department = (Department) o;
-        return Objects.equals(id, Department.id) && Objects.equals(name, Department.name);
+    public Integer getId() {
+        return id;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
-    }
-
-    @Override
-    public String toString() {
-        return "entities{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

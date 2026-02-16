@@ -2,6 +2,7 @@ module br.com.gbass.workshopjavafxjdbc {
     requires javafx.controls;
     requires javafx.fxml;
     requires jdk.compiler;
+    requires java.sql;
 
 
     opens application to javafx.fxml;
