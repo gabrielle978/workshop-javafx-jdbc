@@ -26,7 +26,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class departmentListController implements Initializable {
+public class departmentListController implements Initializable, dataChangeListener {
     private departmentService service;
 
     @FXML
@@ -89,6 +89,7 @@ public class departmentListController implements Initializable {
             departmentFormController controller = loader.getController();
             controller.setDepartment(obj);
             controller.setDepartmentService(new departmentService());
+            controller.subscribeDataChangeListener(this);
             controller.updateFormData();
 
             //função para carregar e preencher dados no formulário para novo departamento;
@@ -102,7 +103,12 @@ public class departmentListController implements Initializable {
         }
         catch (IOException e){
             e.printStackTrace();
-            //lerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+            //Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
+
+    @Override
+    public void onDataChanged() {
+        updateTableView();
     }
 }

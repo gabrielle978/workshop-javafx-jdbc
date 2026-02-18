@@ -15,11 +15,14 @@ import util.Constraints;
 import util.Utils;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class departmentFormController implements Initializable {
     private Department entity;
     private departmentService service;
+    private List<dataChangeListener> dataChangeListeners = new ArrayList<>();
 
     @FXML
     private TextField txtId;
@@ -44,6 +47,10 @@ public class departmentFormController implements Initializable {
         this.service = service;
     }
 
+    public void subscribeDataChangeListener(dataChangeListener listener){
+        dataChangeListeners.add(listener);
+    }
+
     @FXML
     public void onBtSaveAction(ActionEvent event){
         //exceções que avisam caso o programador esqueça de injetar dependências
@@ -56,11 +63,18 @@ public class departmentFormController implements Initializable {
         try{
             entity = getFormData();
             service.saveOrUpdate(entity);
+            notifyDataChangeListeners();
             Utils.currentStage(event).close();
         } catch (DbException e){
             Alerts.showAlert("Error saving object", null, e.getMessage(), Alert.AlertType.ERROR);
         }
 
+    }
+
+    private void notifyDataChangeListeners() {
+        for (dataChangeListener listener : dataChangeListeners){
+            listener.onDataChanged();
+        }
     }
 
     private Department getFormData() {
