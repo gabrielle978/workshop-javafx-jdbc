@@ -9,5 +9,7 @@ module br.com.gbass.workshopjavafxjdbc {
     opens model.entities to javafx.base;
 
     exports application;
+    exports application.controllers;
+    opens application.controllers to javafx.fxml;
 
 }

@@ -1,5 +1,6 @@
-package application;
+package application.controllers;
 
+import application.dataChangeListener;
 import db.DbException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

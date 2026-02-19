@@ -1,7 +1,7 @@
-package application;
+package application.controllers;
 
-import com.sun.tools.javac.Main;
-import db.DbIntegrityException;
+import application.dataChangeListener;
+import application.mainApplication;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,7 +53,7 @@ public class departmentListController implements Initializable, dataChangeListen
     public void onBtNewAction(ActionEvent event){
         Stage parentStage = Utils.currentStage(event);
         Department obj = new Department();
-        createDialogForm(obj, parentStage, "/departmentForm.fxml");
+        createDialogForm(obj, parentStage, "/gui/departmentForm.fxml");
     }
 
     public void setDepartmentService (departmentService service){
@@ -134,7 +134,7 @@ public class departmentListController implements Initializable, dataChangeListen
               }
               setGraphic(button);
               button.setOnAction(
-                      event -> createDialogForm(obj, Utils.currentStage(event), "/departmentForm.fxml"));
+                      event -> createDialogForm(obj, Utils.currentStage(event), "/gui/departmentForm.fxml"));
           }
         });
     }
