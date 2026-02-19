@@ -7,16 +7,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.entities.Seller;
 import model.services.sellerService;
 import util.Alerts;
 import util.Utils;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -35,6 +41,16 @@ public class sellerListController implements Initializable, dataChangeListener {
 
     @FXML
     private Button btNew;
+
+    @FXML
+    private TableColumn <Seller, String> tableColumnEmail;
+
+    @FXML
+    private TableColumn <Seller, Date> tableColumnBirthDate;
+
+    @FXML
+    private TableColumn <Seller, Double> tableColumnBaseSalary;
+
 
     @FXML
     private TableColumn<Seller, Seller> tableColumnEDIT;
@@ -67,6 +83,12 @@ public class sellerListController implements Initializable, dataChangeListener {
         //add no module info -> opens model.entities to javafx.base;
         tableColumnId.setCellValueFactory(new PropertyValueFactory<>("id"));
         tableColumnName.setCellValueFactory(new  PropertyValueFactory<>("name"));
+        tableColumnEmail.setCellValueFactory(new  PropertyValueFactory<>("email"));
+        tableColumnBirthDate.setCellValueFactory(new  PropertyValueFactory<>("birthDate"));
+        Utils.formatTableColumnDate(tableColumnBirthDate, "dd/MM/yyyy");
+        tableColumnBaseSalary.setCellValueFactory(new  PropertyValueFactory<>("baseSalary"));
+        Utils.formatTableColumnDouble(tableColumnBaseSalary, 2);
+
 
         Stage stage = (Stage) mainApplication.getMainScene().getWindow();
         SellerTableView.prefHeightProperty().bind(stage.heightProperty());
@@ -84,12 +106,12 @@ public class sellerListController implements Initializable, dataChangeListener {
         initRemoveButtons();
     }
 
-//    private void createDialogForm(Seller obj, Stage parentStage, String pathView){
+    private void createDialogForm(Seller obj, Stage parentStage, String pathView){
 //        try {
 //            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
 //            Pane pane = loader.load();
 //
-//            ellerFormController controller = loader.getController();
+//            sellerFormController controller = loader.getController();
 //            controller.setSeller(obj);
 //            controller.setSellerService(new SellerService());
 //            controller.subscribeDataChangeListener(this);
@@ -108,7 +130,7 @@ public class sellerListController implements Initializable, dataChangeListener {
 //            e.printStackTrace();
 //            //Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
 //        }
-//    }
+  }
 
     @Override
     public void onDataChanged() {
@@ -128,8 +150,8 @@ public class sellerListController implements Initializable, dataChangeListener {
                   return;
               }
               setGraphic(button);
-              //button.setOnAction(
-                      //event -> createDialogForm(obj, Utils.currentStage(event), "/SellerForm.fxml"));
+              button.setOnAction(
+                      event -> createDialogForm(obj, Utils.currentStage(event), "/SellerForm.fxml"));
           }
         });
     }
