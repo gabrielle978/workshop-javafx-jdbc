@@ -1,4 +1,4 @@
-package application.controllers;
+package application.controllers.seller;
 
 import application.dataChangeListener;
 import db.DbException;
@@ -9,9 +9,9 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import model.entities.Department;
+import model.entities.Seller;
 import model.exceptions.ValidationException;
-import model.services.departmentService;
+import model.services.sellerService;
 import util.Alerts;
 import util.Constraints;
 import util.Utils;
@@ -19,9 +19,9 @@ import util.Utils;
 import java.net.URL;
 import java.util.*;
 
-public class departmentFormController implements Initializable {
-    private Department entity;
-    private departmentService service;
+public class sellerFormController implements Initializable {
+    private Seller entity;
+    private sellerService service;
     private List<dataChangeListener> dataChangeListeners = new ArrayList<>();
 
     @FXML
@@ -39,11 +39,11 @@ public class departmentFormController implements Initializable {
     @FXML
     private Button btCancel;
 
-    public void setDepartment(Department entity){
+    public void setseller(Seller entity){
         this.entity = entity;
     }
 
-    public void setDepartmentService(departmentService service){
+    public void setsellerService(sellerService service){
         this.service = service;
     }
 
@@ -80,8 +80,8 @@ public class departmentFormController implements Initializable {
         }
     }
 
-    private Department getFormData() {
-        Department obj = new Department();
+    private Seller getFormData() {
+        Seller obj = new Seller();
 
         ValidationException exception = new ValidationException("Validation error");
 

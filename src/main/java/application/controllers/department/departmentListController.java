@@ -1,4 +1,4 @@
-package application.controllers;
+package application.controllers.department;
 
 import application.dataChangeListener;
 import application.mainApplication;

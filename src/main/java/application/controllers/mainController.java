@@ -1,5 +1,7 @@
 package application.controllers;
 
+import application.controllers.department.departmentListController;
+import application.controllers.seller.sellerListController;
 import application.mainApplication;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

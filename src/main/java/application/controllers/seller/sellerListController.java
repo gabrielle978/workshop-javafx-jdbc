@@ -1,4 +1,4 @@
-package application.controllers;
+package application.controllers.seller;
 
 import application.dataChangeListener;
 import application.mainApplication;
@@ -64,7 +64,7 @@ public class sellerListController implements Initializable, dataChangeListener {
     public void onBtNewAction(ActionEvent event){
         Stage parentStage = Utils.currentStage(event);
         Seller obj = new Seller();
-        //createDialogForm(obj, parentStage, "/SellerForm.fxml");
+        createDialogForm(obj, parentStage, "/gui/sellerForm.fxml");
     }
 
     public void setSellerService (sellerService service){
@@ -107,29 +107,29 @@ public class sellerListController implements Initializable, dataChangeListener {
     }
 
     private void createDialogForm(Seller obj, Stage parentStage, String pathView){
-//        try {
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
-//            Pane pane = loader.load();
-//
-//            sellerFormController controller = loader.getController();
-//            controller.setSeller(obj);
-//            controller.setSellerService(new SellerService());
-//            controller.subscribeDataChangeListener(this);
-//            controller.updateFormData();
-//
-//            //função para carregar e preencher dados no formulário para novo departamento;
-//            Stage dialogStage = new Stage();
-//            dialogStage.setTitle("Enter Seller data");
-//            dialogStage.setScene(new Scene(pane));
-//            dialogStage.setResizable(false);
-//            dialogStage.initOwner(parentStage);
-//            dialogStage.initModality(Modality.WINDOW_MODAL);
-//            dialogStage.showAndWait();
-//        }
-//        catch (IOException e){
-//            e.printStackTrace();
-//            //Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
-//        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(pathView));
+            Pane pane = loader.load();
+
+            sellerFormController controller = loader.getController();
+            controller.setseller(obj);
+            controller.setsellerService(new sellerService());
+            controller.subscribeDataChangeListener(this);
+            controller.updateFormData();
+
+            //função para carregar e preencher dados no formulário para novo departamento;
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Enter Seller data");
+            dialogStage.setScene(new Scene(pane));
+            dialogStage.setResizable(false);
+            dialogStage.initOwner(parentStage);
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.showAndWait();
+        }
+        catch (IOException e){
+            e.printStackTrace();
+            //Alerts.showAlert("IO Exception", "Error loading view", e.getMessage(), Alert.AlertType.ERROR);
+        }
   }
 
     @Override
@@ -151,7 +151,7 @@ public class sellerListController implements Initializable, dataChangeListener {
               }
               setGraphic(button);
               button.setOnAction(
-                      event -> createDialogForm(obj, Utils.currentStage(event), "/SellerForm.fxml"));
+                      event -> createDialogForm(obj, Utils.currentStage(event), "/gui/sellerForm.fxml"));
           }
         });
     }
