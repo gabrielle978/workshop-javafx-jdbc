@@ -5,10 +5,7 @@ import db.DbException;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import model.entities.Seller;
 import model.exceptions.ValidationException;
 import model.services.sellerService;
@@ -17,6 +14,8 @@ import util.Constraints;
 import util.Utils;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 public class sellerFormController implements Initializable {
@@ -31,7 +30,25 @@ public class sellerFormController implements Initializable {
     private TextField txtName;
 
     @FXML
+    private TextField txtEmail;
+
+    @FXML
+    private DatePicker dpBirthDate;
+
+    @FXML
+    private TextField txtBaseSalary;
+
+    @FXML
     private Label labelErrorName;
+
+    @FXML
+    private Label labelErrorEmail;
+
+    @FXML
+    private Label labelErrorBirthDate;
+
+    @FXML
+    private Label labelErrorBaseSalary;
 
     @FXML
     private Button btSave;
@@ -109,7 +126,10 @@ public class sellerFormController implements Initializable {
 
     private void initializeNodes(){
         Constraints.setTextFieldInteger(txtId);
-        Constraints.setTextFieldMaxLength(txtName, 32);
+        Constraints.setTextFieldMaxLength(txtName, 60);
+        Constraints.setTextFieldDouble(txtBaseSalary);
+        Constraints.setTextFieldMaxLength(txtEmail, 50);
+        Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
     }
 
     public void updateFormData(){
@@ -117,7 +137,14 @@ public class sellerFormController implements Initializable {
             throw new IllegalStateException("entity was null.");
         }
         txtId.setText(String.valueOf(entity.getId()));
-        txtName.setText(String.valueOf(entity.getName()));
+        txtName.setText(entity.getName());
+        txtEmail.setText(entity.getEmail());
+        Locale.setDefault(Locale.US);
+        txtBaseSalary.setText(String.format("%.2f", entity.getBaseSalary()));
+        if (entity.getBirthDate() != null){
+            dpBirthDate.setValue(
+                    ((java.sql.Date)entity.getBirthDate()).toLocalDate());
+        }
     }
 
     private void setErrorMessages(Map<String, String> errors){

@@ -2,11 +2,15 @@ package util;
 
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
 
@@ -36,7 +40,14 @@ public class Utils {
                     if (item == null || empty){
                         setText(null);
                     } else {
-                        setText(sdf.format(item));
+                        Date utilDate;
+                        if (item instanceof java.sql.Date){
+                            utilDate = new Date(item.getTime());
+                        }
+                        else {
+                            utilDate = item;
+                        }
+                        setText(sdf.format(utilDate));
                     }
                 }
             };
@@ -60,6 +71,33 @@ public class Utils {
                 }
             };
             return cell;
+        });
+    }
+
+    public static void formatDatePicker (DatePicker datePicker, String format){
+        datePicker.setConverter(new StringConverter<LocalDate>() {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(format);
+            {
+                datePicker.setPromptText(format.toLowerCase());
+            }
+            @Override
+            public String toString(LocalDate localDate) {
+                if (localDate != null){
+                    return dateTimeFormatter.format(localDate);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String s) {
+                if (s != null && !s.isEmpty()){
+                    return LocalDate.parse(s, dateTimeFormatter);
+                }
+                else{
+                    return null;
+                }
+            }
         });
     }
 }
