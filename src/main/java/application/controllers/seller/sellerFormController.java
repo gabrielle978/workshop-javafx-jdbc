@@ -2,16 +2,21 @@ package application.controllers.seller;
 
 import application.dataChangeListener;
 import db.DbException;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.util.Callback;
+import model.entities.Department;
 import model.entities.Seller;
 import model.exceptions.ValidationException;
 import model.services.sellerService;
 import util.Alerts;
 import util.Constraints;
 import util.Utils;
+import model.services.departmentService;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -20,8 +25,11 @@ import java.util.*;
 
 public class sellerFormController implements Initializable {
     private Seller entity;
-    private sellerService service;
+    //sellS = sellerService
+    private sellerService sellS;
     private List<dataChangeListener> dataChangeListeners = new ArrayList<>();
+    //depS = departmentService
+    private departmentService depS;
 
     @FXML
     private TextField txtId;
@@ -37,6 +45,9 @@ public class sellerFormController implements Initializable {
 
     @FXML
     private TextField txtBaseSalary;
+
+    @FXML
+    private ComboBox<Department> departmentComboBox;
 
     @FXML
     private Label labelErrorName;
@@ -56,12 +67,15 @@ public class sellerFormController implements Initializable {
     @FXML
     private Button btCancel;
 
+    private ObservableList<Department> observableList;
+
     public void setseller(Seller entity){
         this.entity = entity;
     }
 
-    public void setsellerService(sellerService service){
-        this.service = service;
+    public void setServices(sellerService sellS, departmentService depS){
+        this.sellS = sellS;
+        this.depS = depS;
     }
 
     public void subscribeDataChangeListener(dataChangeListener listener){
@@ -74,12 +88,12 @@ public class sellerFormController implements Initializable {
         if (entity == null){
             throw new IllegalStateException("Entity is null");
         }
-        if (service == null){
+        if (sellS == null){
             throw new IllegalStateException(("Service is null"));
         }
         try{
             entity = getFormData();
-            service.saveOrUpdate(entity);
+            sellS.saveOrUpdate(entity);
             notifyDataChangeListeners();
             Utils.currentStage(event).close();
         } catch (DbException e){
@@ -130,6 +144,8 @@ public class sellerFormController implements Initializable {
         Constraints.setTextFieldDouble(txtBaseSalary);
         Constraints.setTextFieldMaxLength(txtEmail, 50);
         Utils.formatDatePicker(dpBirthDate, "dd/MM/yyyy");
+
+        initializeComboBoxDepartment();
     }
 
     public void updateFormData(){
@@ -145,6 +161,16 @@ public class sellerFormController implements Initializable {
             dpBirthDate.setValue(
                     ((java.sql.Date)entity.getBirthDate()).toLocalDate());
         }
+        if(entity.getDepartment() == null){
+            departmentComboBox.getSelectionModel().selectFirst();
+        }
+        departmentComboBox.setValue(entity.getDepartment());
+    }
+
+    public void loadAssociatedObjects(){
+        List<Department> list = depS.findAll();
+        observableList = FXCollections.observableArrayList(list);
+        departmentComboBox.setItems(observableList);
     }
 
     private void setErrorMessages(Map<String, String> errors){
@@ -152,5 +178,18 @@ public class sellerFormController implements Initializable {
         if (fields.contains("name")){
             labelErrorName.setText(errors.get("name"));
         }
+    }
+
+    private void initializeComboBoxDepartment(){
+        Callback<ListView<Department>, ListCell<Department>> factory = lv ->
+                new ListCell<Department>(){
+                    @Override
+                    protected void updateItem(Department item, boolean empty){
+                        super.updateItem(item,empty);
+                        setText(empty? "": item.getName());
+                    }
+                };
+        departmentComboBox.setCellFactory(factory);
+        departmentComboBox.setButtonCell(factory.call(null));
     }
 }

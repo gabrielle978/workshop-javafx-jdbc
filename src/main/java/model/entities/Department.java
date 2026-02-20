@@ -32,12 +32,10 @@ public class Department {
         return Objects.hashCode(id);
     }
 
+    //let only name toString. And you will see only the name os department on comboBox sellerFormView
     @Override
     public String toString() {
-        return "Department{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return name;
     }
 
     public String getName() {
