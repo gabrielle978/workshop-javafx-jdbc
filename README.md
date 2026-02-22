@@ -11,5 +11,8 @@
 - JavaFX SDK
 - Java (JDK) installed
 
+
+
 🟡 *NOTE:*
-If your JAR file is a FAT JAR, it may already include all dependencies, the project code, the MySQL Connector, and possibly JavaFX in a single file.
+- If your JAR file is a FAT JAR, it may already include all dependencies, the project code, the MySQL Connector, and possibly JavaFX in a single file.
+- If you wants to make your application have an easily usability, using the ***jpackage*, create an *aplication.exe***
